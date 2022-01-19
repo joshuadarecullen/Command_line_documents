@@ -1,0 +1,340 @@
+################## 25 git commands cheatsheet #######################
+
+# Tell git who you are, to allow it to automatically add metadata to your code changes, as follows:
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+
+Git allows you full control over which files are part of your repository and which aren't. Even though we initialized the Git repo in our firstapp directory, our repo currently contains no files. Add our application to the repo, commit,and then push it, as follows:
+
+1. git add
+
+# Git add stages one or many files depending on the options given. You can stage one file using
+git add 
+
+# or many files using
+git add .
+git add * 
+
+
+2. git branch
+
+#Git branch is crucial in listing or deleting branches. To list the branch(es), use
+git branch "name"
+
+# for local branches,
+git branch -r "name"
+
+# for remote branches,
+git branch -a "name"
+
+# for local and remote branches
+# Delete a branch using
+git branch -d <branch name>
+
+
+3. git checkout 
+
+# Git checkout command helps to switch between branches. You can also use it to undo changes in a file or commit.
+git checkout "name" - checkpoint, does not tamper with current code
+git checkout master
+
+
+4. git clean
+
+# Git clean enables you to view or discard untracked files or folders depending on the given flag. For instance,
+git clean -n
+
+# lists untracked files about to get deleted,
+git clean -f
+
+# clears all untracked files,
+git clean -i
+
+# interactively removes all untracked files, while
+git clean -fd
+
+# deletes both untracked files and directories.
+# Use
+git clean -fX
+# to delete ignored and untracked files and
+git clean -fx
+# to remove both unignored and ignored files.
+
+
+5. git clone
+
+# Git clone
+git clone <remote URL>
+
+
+6. git commit
+
+# Git commit is one of the most crucial commands we had to include in this 
+# git command cheat sheet. Depending on the provided flag, it saves changes in the history.
+
+# For instance, -m flag symbolizes message, --all flag saves modified and deleted files. 
+# Here is an example of a git commit message with the -m flag:
+git commit -m "Feat: Add a text file"
+
+
+7. git fetch
+
+# It transfers remote branch refs, commits, and tags into your local project.
+# Running the fetch command with a remote name
+git fetch <remote>
+
+# gets all the repo's branches, downloading all the needed files and commits from the remote.
+# You can specify the remote branch to get a more condensed answer.
+git fetch <remote> <branch>
+
+# If you want all remotes with their respective branches, use
+git fetch --all
+
+# Use to output actions to be taken without applying the actions.
+git fetch --dry-run
+
+# Lastly, using
+git fetch -v
+# shows all the fetched commits.
+
+
+8. git init
+
+# Decoding git init for you and when to use it?
+
+# The init command instantiates a repo. The level of interaction with the repo depends on the supplied flags. For example, the --bare flag
+
+git init --bare
+
+# omits the working directory, keeping the files in the <project.git>
+
+
+9. git log
+
+# Running the git log commands, such as
+
+git log
+
+git log --oneline
+
+git log --pretty=oneline
+
+# reveals the state of the commit history.
+
+10. git ls-files
+
+git ls-files
+
+# lists all the tracked files.
+
+
+11. git ls-remote
+
+# git ls-remote is one of the alternatives to git branch -r.
+
+git ls-remote --heads <remote name>
+
+# It lists all remote branches.
+
+
+12. git merge
+
+git merge <branch>
+
+# takes changes from the feature branch and adds them to the main one, whereas
+
+git merge --squash <branch>
+
+# groups feature branch's commits before combining the feature branch's changes on the main branch's workflow.
+
+
+13. git pull
+
+# git pull synchronizes a local repo with its upstream by downloading the most updated state of the repo
+git pull <REPO_URL> <BRANCH>
+
+ 
+14. git push
+
+# git push is the opposite of git pull. It synchronizes a 
+# remote repository by uploading the most updated state of the local repository.
+
+# Push the master branch to the remote named <i class="calibre6">origin.
+git push origin master 
+
+# Create a remote-tracking branch to new_branch on the remote named origin.
+git push --set-upstream origin new_branch
+
+# Remove the branch named remotebranch from the remote named origin
+git push origin :remotebranch
+
+# Push the tag named TAGNAME to the remote named origin.
+git push origin TAGNAME
+
+# Push all tags to the default remote.
+git push --tags
+
+# Delete the tag named TAGNAME on the remote named origin.
+git push origin :TAGNAME
+
+# Mirrors the local repository to the remote one.
+git push --mirror
+
+# facilitates a push of all local tags
+git push --dry-run 
+
+# Remove remote branches that don’t have a local counterpart
+git push --prune 
+
+# Eliminates remote branches without local copies
+git push <remote_name> --delete <branch_name> 
+
+
+15. git rebase
+
+git rebase <branch>
+# creates a linear repo by stacking the changes from the feature branch onto the main branch's commits.
+
+
+16. git reflog
+
+# The reflog command
+git reflog
+
+# reveals all updates made at each branch's tip. It mainly works with the checkout 
+# command to restore files you deleted (a few hours ago) using the hard reset command.
+
+
+17. git reset
+
+# A practical guide to git reset hard vs soft vs mixed
+# Git reset takes three forms: hard, soft, mixed. Here is the example of each command in action.
+# The hard reset on a commit hash
+
+git reset --hard <commit hash>
+
+# removes a commit, then deletes the untracked files from the working directory.
+
+# A soft reset
+
+git reset --soft <commit hash>
+
+git reset --soft HEAD^
+
+git reset --soft HEAD~1
+
+# changes the commit HEAD's reference, taking the changes to the index. Lastly, the mixed reset command on a file
+
+git reset HEAD <file>
+
+# unstages the file, keeping the changes in the working directory.
+
+
+18. git restore
+
+# The restore command in combination with the --staged flag
+
+git restore --staged <file>
+
+# unstages a modified file, whereas
+
+git restore <file>
+
+# deletes untracked files.
+
+
+19. git remote
+
+# Remote is the name of your repository on a cloud service. You can add it as follows:
+
+git remote add <remote-name> <url>
+
+# To delete the remote use
+
+git remote rm <remote-name>
+
+# or
+
+git remote remove <remote-name>
+
+# and to rename a remote.
+
+git remote rename <old-name> <new-name>
+
+# Lastly, introducing the -v flag
+
+git remote -v
+
+# lists the remotes.
+
+
+20. git rm
+
+# Git remove command
+
+git rm --cached <file>
+
+# unstages a new file.
+
+
+21. git revert
+
+# undoes operations then creates a new commit, inversing the specified changes.
+git revert <commit hash>
+
+
+22. git stash
+
+# discards the uncommitted changes, recording the discarded changes in the .git/refs/stash file.
+git stash
+
+# You can view the stashed files using the show subcommand.
+git stash show
+
+# Another commonly applied subcommand is apply which restores the discarded changes.
+git stash apply
+
+
+23. git status
+
+# The git status command inspects the staging condition of files.
+#  For example, files marked in red are untracked, whereas those marked in green are indexed.
+
+
+24. git switch
+
+# Git switch enables you to enter or leave a branch.
+git switch <branch name>
+
+# You can also use it to create a branch and check out the branch by combining it with the -c.
+git switch -c <branch name>
+
+
+25. git tag
+
+# You can create a lightweight tag using the command
+git tag <tag name>
+
+#and for an annotated tag.
+git tag -a <tag name> -m <message>
+
+# To list the tags in alphabetical order, use git tag only.
+git tag
+
+
+
+GIT Commit IMPORTANT:
+well-cared for log is a beautiful and useful thing. 
+git blame, revert, rebase, log, shortlog and other subcommands come to life.
+ Reviewing others’ commits and pull requests becomes something worth doing, and suddenly can be done independently. Understanding why something happened months or years ago becomes not only possible but efficient.
+
+1. Separate subject from body with a blank line
+2. Limit the subject line to 50 characters
+3. Capitalize the subject line
+4. Do not end the subject line with a period
+5. Use the imperative mood in the subject line
+	-Imperative mood just means “spoken or written as if giving a command or instruction”
+	-Do not report facts. 
+	- A properly formed Git commit subject line should always be able to complete the following sentence: If applied, this commit will "your subject line here"
+6. Wrap the body at 72 characters
+7. Use the body to explain what and why vs. how
