@@ -1,0 +1,6 @@
+1. creating a virtual environment - virtualenv <name>
+2. activating environment - source name/bin/activate
+3. checking currently running python - which python
+4. list the dependencies of the environment - pip freeze --local requirements.txt
+5. exit environment - deactivate
+6. installing requirements in virtual environments using the text file (have to be in the virtual environment)- pip install -r requirements.txt

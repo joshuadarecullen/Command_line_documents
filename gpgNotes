@@ -1,0 +1,64 @@
+Installing 
+
+Red Hat / CentOS - yum install gnupg
+Ubuntu / Debian - apt-get install gnupg
+macOS - ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" -- brew install gnupg
+
+Creating a GPG key:
+gpg --gen-key
+
+Export your public key:
+gpg --export --armor youremail@example.com > mypubkey.asc
+
+Import another person’s public key:
+gpg --import theirpubkey.asc
+
+List the public keys in your keyring:
+gpg --list-keys
+
+List private keys in your keyring:
+gpg --list-secret-keys
+
+Trust a public key:
+
+gpg --edit-key glenn
+
+trust (invoke trust subcommand on the key)
+5 (ultimate trust)
+y (if prompted)
+quit
+
+Encrypt a file:
+gpg --encrypt --recipient glenn filename.txt
+
+If you want to encrypt a file so that only you yourself can decrypt it, then specify yourself as the recipient:
+gpg --encrypt --recipient 'my_name' filename.txt
+
+If you want to encrypt a file so that both you and another person can decryptthe file, specify both you and the other person as recipients:
+gpg --encrypt --recipient glenn --recipient 'my_name' filename.txt
+
+If you want to encrypt a file for a group of people, define the group in yourgpg.conf file (see section below), and then specify the group as a recipient:
+gpg --encrypt --recipient journalists filename.txt
+
+After a while, you’ll want to be more concise and use the short version of the command line options.  Here’s the same command:
+gpg -e -r journalists filename.txt
+
+
+Decrypt a file to terminal (standard output):
+gpg --decrypt filename.txt.gpg
+
+Use the --decrypt option only if the file is an ASCII text file.  If it’s a binary file, then omit the --decrypt option, which will write the decrypted file to disk.  At that point, you can open the binary file in whatever application is used to view the file.
+
+Create Groups of People in Your GPG Configuration File
+
+For convenience, you can pre-define a group of people in your GPG configuration file.  This has the benefit of allowing you to encrypt a file to every member of the group by specifying only the group name as the recipient, rather than tediously specifying every individual member of the group.
+
+Your GPG software configuration is stored in your home directory within the ~/.gnupg/gpg.conf file.  Edit this file using your favorite command line text editor (vim, nano, pico, emacs, etc).  While there are numerous settings available in the configuration file, go to the section pertinent to defining groups.
+
+When defining a group, you list the members of the group.  Each member is referenced by some attribute of their public key found in your GPG keyring — typically a person’s name (or partial name, such as first or last name) or an email address (or partial email address).
+
+If you are a member of the group, remember to include yourself in the group!  If you do not list yourself in the group, you won’t be able to decrypt any files you encrypt to the group.
+
+Here’s an example of a group named “journalists”, listing the first name of each person.
+
+group  journalists  =  glenn  laura  ewan  barton

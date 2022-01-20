@@ -1,0 +1,76 @@
+Open Terminal (keyboard shortcut: Ctrl + Alt + T).
+Install the OpenVPN client by entering:
+ 
+
+    sudo apt-get install openvpn
+
+    You may be asked to enter your user password to confirm your identity.
+     
+
+Navigate to the OpenVPN configuration directory with command:
+ 
+
+    cd /etc/openvpn
+     
+
+Download OpenVPN configuration files with command
+ 
+
+    sudo wget https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip
+
+    In case you get ERROR: The certificate of `nordvpn.com’ is not trusted., please install the ca-certificates package with command:
+     
+    sudo apt-get install ca-certificates
+     
+
+If you do not have the unzip package installed, download it by typing in
+ 
+
+    sudo apt-get install unzip
+     
+
+Extract config.zip with command:
+ 
+
+    sudo unzip ovpn.zip
+     
+
+Remove files that will no longer be used:
+ 
+
+    sudo rm ovpn.zip
+
+
+
+You're storing your authentication data in a file. The fact that OpenVPN is additional storing it in RAM is then something you shouldn't care about. It's there for environments where you type the password (or obtain it from some hardware security module). So just ignore the warning.
+
+If you really want --auth-nocache, you can either:
+
+    put it in your .ovpn file (as auth-nocache); or
+    openvpn --auth-nocache --config lv2.nordvpn.com.udp1194.ovpn should work. The key thing is you need that --config argument to specify the config name.
+
+The bad packet ID warning is telling you about something that happened on the network. Has nothing to do with caching (or not) authentication. If you want to get rid of this warning (after reading the sections about replay), use --mute-replay-warnings like it says (either on the command line or in the .ovpn file).
+     
+
+Enter the directory where the server configurations are. These folders are either ovpn_udp or ovpn_tcp:
+ 
+
+    cd /etc/openvpn/ovpn_udp/
+    cd /etc/openvpn/ovpn_tcp/
+     
+
+To see the list of all available servers, enter the following command:
+ 
+
+    ls -al
+
+Start OpenVPN with a chosen configuration by entering:
+ 
+
+    sudo openvpn [file name]
+    sudo openvpn us2957.nordvpn.com.udp.ovpn
+    sudo openvpn /etc/openvpn/ovpn_udp/us2957.nordvpn.com.udp.ovpn
+     
+
+OpenVPN will ask you for credentials. Enter your NordVPN account login details.
+You have successfully connected to VPN. To disconnect, open Terminal and press Ctrl + C on your keyboard.

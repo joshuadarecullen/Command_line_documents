@@ -1,0 +1,10 @@
+Notes on common apache2 commands
+
+#enabling a new configuration file
+sudo a2ensite filename
+
+#disabling the current config file
+sudo a2dissite filename
+
+#reloading the server
+service apache2 reload

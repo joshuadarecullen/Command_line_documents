@@ -1,0 +1,9 @@
+
+
+#initializes the environment and the -y provides default settings
+---> npm init -y
+
+#js task runner, automatically resyncs broswers when edits are made
+---> npm i gulp browser-sync
+
+

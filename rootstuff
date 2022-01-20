@@ -1,0 +1,5 @@
+sudo passwd -u root -> changes the password for the root user
+dsenableroot -d -> disables the root user
+dsenableroot -d -u disbales a specific root users password
+dsenableroot -> promtps for password to enable the root user
+
