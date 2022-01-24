@@ -1,0 +1,276 @@
+How to Write Scripts for zsh
+May 9, 2019
+Believe it or not, these “built-in” completions are simply shell functions. If you want to customize the behavior of your command line, you can edit existing completion functions or create your own. This month, we’ll look at basic zsh scripting and learn some fundamental skills as preparation for next month’s column on programming completions.
+
+The zsh scripting language extends the Bourne shell syntax and can be quite complicated. Set aside some time to experiment and don’t underestimate the learning curve because it’s “only shell scripting.” Mastering the basic concepts will take some effort.
+
+Globbing
+
+Let’s start with a simple problem. Suppose you have a directory hierarchy full of text files with their execute permission bit set. How can you recursively turn off the execute permission for files, but leave the execute permissions for the directories alone? With the Bourne shell, you might do something like this:
+
+
+ % find . -type f -print | xargs chmod -x
+ 
+Using zsh and globs (special strings containing wildcard characters like ?, *, etc.) the solution is simpler. zsh‘s globbing abilities are good enough to make find unnecessary. We need only run this to get the same result:
+
+The leading **/ tells zsh to glob recursively. The * following that means to get everything. Finally, the glob ends in a (.), which is a glob qualifier, that restricts the matching to files.
+
+Here’s another example (with additional glob qualifiers). Suppose an unwanted visitor compromised the security of your machine, and you want to find out if he implanted any trojan horses (trojan horses are programs that disguise themselves as regular Linux commands like passwd and then transmit stolen information back to the evildoer) and check the entire filesystem to see if any executable files have been modified since yesterday. In zsh, this can be done with:
+
+% print -l /**/*(*.m-1)
+ 
+Notice how glob qualifiers can be chained together. This time, we have “*” which means executables, “.” which means plain files, and “m-1” which limits matches to anything with a modification time of one day or less. The -l option tells print to print out each value on a separate line. As you can see, using glob qualifiers together with recursive globbing makes zsh‘s globbing system just as powerful as the find program.
+
+For a full list of glob qualifiers, see the “Glob Qualifiers” section of the zshexpn man page. For more on filename generation and pattern matching, see section 5.9 of the Zsh User’s Guide (http://zsh.sunsite.dk/Guide/).
+
+Data Types and Attributes
+
+We’ve just seen how globbing can generate huge lists of filenames. But once you have a list, the question is how to contain it. An array works perfectly for this. In the following command, list will be assigned a list of all the files in /usr/bin.
+
+
+ % list=(/usr/bin/*)
+ 
+This array can then be accessed in a number of ways that programmers (especially Perl programmers) may find familiar. However, be careful. In zsh, arrays are indexed from 1 instead of 0. Below are some examples using arrays.
+
+To get the array size, use a $# before the array name:
+
+
+ % print $#list
+
+ 462
+ 
+Both positive numbers and negative numbers can be used as indexes into the array. Positive numbers count forward from the start of the array; negative numbers count backward from the end of the array:
+
+
+ % print $list[462]
+
+ /usr/bin/zprint
+
+ % print $list[-462]
+
+ /usr/bin/a2p
+ 
+To retrieve multiple values as a sub-list (or a “slice”), we can add a comma between starting and ending index numbers:
+
+
+ % print -l $list[23,25]
+
+ /usr/bin/atq
+
+ /usr/bin/atrm
+
+ /usr/bin/atstatus
+The array is just one of zsh‘s five data types. The other four types are: association (a hash table), scalar (a string), float, and integer. In general, type is handled automatically (as far as the programmer is concerned). For example, the following code assigns a scalar value to theory, a float to pi, and an integer to a without the need for type to be declared explicitly:
+
+
+ % theory="conspiracy"
+
+ % pi=3.14159
+
+ % a=42
+ 
+However, one exception is associations. You must first declare a variable as an associative array before it takes on the behavior of one. This is done by using the built-in command typeset -A variable:
+
+
+ % typeset -A hash
+
+ % hash[brown]="Mmm..  hash browns"
+
+ % hash[table]="clever data structure"
+
+ % print ${hash[brown]}
+
+ Mmm..  hash browns
+ 
+typeset is actually quite versatile. It can be used to pre-declare variables of specific types (scalar, int, float, array), although it’s not strictly necessary. It can also give special attributes to variables. Let’s look at some examples.
+
+The -Z 3 option makes the variable agent at least three characters long, padded with zeros if necessary.
+
+
+ % typeset -Z 3 agent
+
+ % agent=7
+
+ % print $agent
+
+ 007
+ 
+The -r option can make a variable read-only.
+
+
+ % typeset -r agent
+
+ % agent=secret
+
+ zsh: read-only variable: agent
+ 
+The -U option forces an array to have unique contents and duplicate values are ignored.
+
+
+ % typeset -U unique_set
+
+ % unique_set=(1 2 4 8 16 8 4 2 1)
+
+ print $unique_set
+
+ 1 2 4 8 16
+ 
+zsh can also tie scalar variables and array variables together with the -T option, effectively giving you two interfaces to the same data. In Figure One, you can see how the variables $DIR and $dir are tied together.
+
+Figure One: Tying scalars to arrays
+
+
+ % typeset -T DIR dir
+% dir=(/etc /var/log /usr/local/bin)
+% print $DIR
+/etc:/var/log:/usr/local/bin
+
+% DIR=”/tmp:/opt”
+% print -l $dir
+/tmp
+/opt
+
+This feature is extremely useful for dealing with “PATH-like” variables. In fact, the $PATH, $FPATH, and $MANPATH environment variables already have matching $path, $fpath, and $manpath variables associated with them when zsh starts up. And since arrays can’t be exported, being able to store the array’s contents into a single string is very useful.
+
+(The reason arrays can’t be exported is because the shell environment is a feature of Unix, not a part of zsh. zsh can support any the data types it wants, but the environment only understands strings. This prevents collections like arrays or associations from being exported. However, float, integer, and scalar variables can be exported without problems.)
+
+For more on typeset, use tab-completion to see a complete list of available special attributes (by typing typeset -[TAB]) or read the zshbuiltins man page.
+
+Using Flags and Modifiers to Transform Data
+
+Now that we have data stored in variables, let’s learn how to manipulate it. In shell programming, data manipulation has traditionally been done by programs like sed and awk which are usually used in a long and contrived series of backticks and pipes. However, zsh scripts can often avoid this by using flags and modifiers. Let’s look at a simple example:
+
+
+ % place="santa barbara"
+
+ % print -l ${(U)place} ${place:u} $place
+
+ SANTA BARBARA
+
+ SANTA BARBARA
+
+ santa barbara
+ 
+Here, we make the entire string upper-case, first using the (U) flag and then using the :umodifier. Then, we print $place without any modifiers or flags to show that the variable was not actually changed.
+
+(Why a (U) flag and a :u modifier? There isn’t much difference between them; you may prefer one or the other depending on your coding style.)
+
+Let’s initialize an array that we’ll use for some more examples:
+
+% list=(
+
+   /usr/bin/perl
+
+   /var/log/wtmp
+
+   /etc/inetd.conf
+
+ )
+ 
+One feature unique to modifiers is specialized filename transformations. A filename transformation can do the same things that basename and dirname can. We can use the -tflag to simulate basename and the -h flag to simulate dirname:
+
+
+ % print ${list:t}
+perl wtmp inent.conf
+% print ${list:h}
+/usr/bin /var/log /etc
+
+We can also simulate grep -v (inverted grep) using the :# modifier to filter out items from list that match the given glob pattern.
+
+
+ % print ${list:#/etc*}
+
+ /usr/bin/perl /var/log/wtmp
+ 
+To simulate a normal grep, the (M) flag is used to reverse the meaning of :#.
+
+
+ % print ${(M)list:#/etc*}
+
+ /etc/inetd.conf
+ 
+Finally, you can combine and nest flags and modifiers to perform complex data manipulations. Unfortunately, the result often looks like line noise. In the next example, we store the complete path names of all entries from /usr/bin in list. Then we print out the file names (in upper case) of all entries that have “ssh” anywhere in the path.
+
+
+ % list=(/usr/bin/*)
+
+ % print -l ${${(UM)list:#*ssh*}:t}
+
+ SSH
+
+ SSH-ADD
+
+ SSH-AGENT
+
+ SSH-KEYGEN
+
+ SSH-KEYSCAN
+ 
+For more on modifiers and parameter expansion flags, see the zshexpn man page.
+
+Conditional Expressions using [[ ]]
+
+That last example might may make you think that the zsh developers don’t care about readability, but that’s not completely true. Look at the improvements made to conditional expressions for reassurance that zsh code can in fact be readable.
+
+zsh has an alternative method for writing conditionals that’s much more expressive than using the traditional test command. It’s greatest strength is its ability to nest conditionals using a familiar and intuitive notation. In the next example, notice how parentheses can be used for grouping, and && and || for logical AND and OR.
+
+
+ if [[   (($x -lt  8) && ($y -ge 32))
+
+      || (($z -gt 32) && ($w -eq 16))  ]]
+
+ then
+
+     print "complex combinations"
+
+     print "are not a problem."
+
+ fi
+ 
+The [[ ]] notation is also downward compatible with the test command, being able to perform the same file and string tests. For example, you can use -e to see if a file exists, -dto see if a name is a directory, or perform string comparisons, in this case, inequality:
+
+
+ [[ -e $HOME/.emacs ]]
+
+ [[ -d $HOME/.ssh ]]
+
+ [[ foo != bar ]]
+ 
+Mathematical Expressions Using (( ))
+
+zsh also has a double parenthesis notation to evaluate mathematical expressions. The most interesting thing about (( )) is that its expression syntax is a radical departure from Bourne shell syntax. Consider the following example.
+
+
+ % a=5; b=32; c=24; (( a += (++a + b * c) - 2 ))
+
+ % print $a
+
+ 777
+ 
+Everything in the example above, from the mathematical operators to how dollar signs are omitted when referring to variables, makes zsh look and feel a lot more like a C program than a shell script. While zsh‘s syntax is definitely an improvement over expr and backticks, there are times when zsh can be a bit too much like C.
+
+For example, the shell script below (just a one-liner typed at the command prompt) demonstrates that zsh‘s type system doesn’t automatically promote integer types to yield the most accurate result. Instead, it’s necessary to explicitly specify one of the two numbers as a floating-point number to get the highest accuracy. Most scripting languages will perform the promotion for you, but whoever implemented the (( )) notation apparently liked C a lot.
+
+% print $(( 5 / 2 ))
+2
+% print $(( 5.0 / 2 ))
+2.5
+
+Besides being used for mathematical functions, (( )) is often used in statements needing conditional expressions. In these cases, expressions that evaluate to 0 are false and everything else is true (like C).
+
+An idiom that you’ll see a lot in the completion functions is the $+var technique, which tests to see if $var is defined. Here are a few examples:
+
+
+ % (( $+var )) && print "tvar exists"
+
+ % (( $+var )) || print "tno, it doesn't exist"
+
+         no, it doesn't exist
+
+ % var=5
+
+ % (( $+var )) && print "tnow var exists"
+
+         now var exists
+ 
+Notice also how the logical AND and OR act as if-then statements. This is just like Perl.
