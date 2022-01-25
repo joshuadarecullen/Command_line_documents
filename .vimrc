@@ -1,18 +1,67 @@
-set background=dark
-colorscheme solarized
+" BASIC SETUP:
 
+" Disable compatibility with vi which can cause unexpected issues.
+set nocompatible
+
+syntax enable
+" set background=dark
+
+
+" PLUGINS
+
+" Enable type file detection. Vim will be able to try to detect the type of file in use.
+filetype on
+
+" Enable plugins and load plugin for the detected file type.
+filetype plugin on 
+
+" Load an indent file for the detected file type.
+filetype indent on
+
+" Highlight cursor line underneath the cursor horizontally.
+set cursorline
+
+" Highlight cursor line underneath the cursor vertically.
+set cursorcolumn
+
+let g:rainbow_active = 1
+
+:set list lcs=tab:\|\ 
+set relativenumber
+
+" Search down into subfolders
+" Provides tab-completion for all file-related tasks
+set path+=**
+
+" Display all matching files when we tab complete
+set wildmenu
+set wildmode=list:longest,full
+
+
+
+"SYNTASTIC
+" :help syntastic
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+
+
+"KEY MAPPINGS:
+
+autocmd vimenter * ++nested colorscheme gruvbox
 autocmd vimenter * NERDTree
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 
-:set list lcs=tab:\|\ 
-set number
-set relativenumber
-set wildmenu
-" set wildmode=list:longest,full
-"
 map <C-o> :NERDTreeToggle<CR>
 
 "inserting lines whilst not entering insert mode
@@ -28,25 +77,8 @@ map<F6> :setlocal spell! spelllang=en_uk<CR>
 
 
 
-" BASIC SETUP:
-
-" enter the current millenium
-set nocompatible
-
-" enable syntax and plugins (for netrw)
-syntax enable
-filetype plugin on
-
-
-
 " FINDING FILES:
 
-" Search down into subfolders
-" Provides tab-completion for all file-related tasks
-set path+=**
-
-" Display all matching files when we tab complete
-set wildmenu
 
 " NOW WE CAN:
 " - Hit tab to :find by partial match
@@ -54,6 +86,7 @@ set wildmenu
 
 " THINGS TO CONSIDER:
 " - :b lets you autocomplete any open buffer
+
 
 
 " TAG JUMPING:
@@ -71,7 +104,6 @@ command! MakeTags !ctags -R .
 
 
 
-
 " AUTOCOMPLETE:
 
 " The good stuff is documented in |ins-completion|
@@ -84,6 +116,8 @@ command! MakeTags !ctags -R .
 
 " NOW WE CAN:
 " - Use ^n and ^p to go back and forth in the suggestion list
+
+
 
 " FILE BROWSING:
 
@@ -99,34 +133,4 @@ let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 " - :edit a folder to open a file browser
 " - <CR>/v/t to open in an h-split/v-split/tab
 " - check |netrw-browse-maps| for more mappings
-
-
-
-
-" SNIPPETS:
-
-" Read an empty HTML template and move cursor to title
-nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a
-
-" NOW WE CAN:
-" - Take over the world!
-"   (with much fewer keystrokes)
-
-
-
-
-
-" BUILD INTEGRATION:
-
-" Steal Mr. Bradley's formatter & add it to our spec_helper
-" http://philipbradley.net/rspec-into-vim-with-quickfix
-
-" Configure the `make` command to run RSpec
-" set makeprg=bundle\ exec\ rspec\ -f\ QuickfixFormatter
-
-" NOW WE CAN:
-" - Run :make to run RSpec
-" - :cl to list errors
-" - :cc# to jump to error by number
-" - :cn and :cp to navigate forward and back
 
