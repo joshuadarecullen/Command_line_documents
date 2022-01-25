@@ -1,31 +1,17 @@
-set background=dark
-colorscheme solarized
+" set background=dark
+let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_italic = '1'
+autocmd vimenter * ++nested colorscheme gruvbox
 
-autocmd vimenter * NERDTree
+" NERDTREE FILE NAVIGATION:
+
+" Start NERDTree when Vim starts with a directory argument.
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
-autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
+    \ execute 'NERDTree' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif
 
-:set list lcs=tab:\|\ 
-set number
-set relativenumber
-set wildmenu
-" set wildmode=list:longest,full
-"
-map <C-o> :NERDTreeToggle<CR>
-
-"inserting lines whilst not entering insert mode
-nmap oo o<Esc>k
-nmap OO O<Esc>j
-
-"jumping between tabs
-nnoremap <C-j> :tabprevious<CR>                                           
-nnoremap <C-k> :tabnext<CR>
-
-"spell checker
-map<F6> :setlocal spell! spelllang=en_uk<CR>
-
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 
 
 " BASIC SETUP:
@@ -37,6 +23,31 @@ set nocompatible
 syntax enable
 filetype plugin on
 
+:set list lcs=tab:\|\ 
+set number
+set relativenumber
+
+
+
+"KEY MAPPINGS:
+
+" toggle nerdtree tab
+map <C-o> :NERDTreeToggle<CR>
+
+" inserting lines whilst not entering insert mode
+nmap oo o<Esc>k
+nmap OO O<Esc>j
+
+" jumping between tabs
+nnoremap <C-j> :tabprevious<CR>                                           
+nnoremap <C-k> :tabnext<CR>
+
+" spell checker
+map<F6> :setlocal spell! spelllang=en_uk<CR>
+
+" mapping python 3 to python command, allows for running python when vim is open
+autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 
 
 " FINDING FILES:
@@ -47,6 +58,7 @@ set path+=**
 
 " Display all matching files when we tab complete
 set wildmenu
+set wildmode=list:longest,full
 
 " NOW WE CAN:
 " - Hit tab to :find by partial match
@@ -54,6 +66,7 @@ set wildmenu
 
 " THINGS TO CONSIDER:
 " - :b lets you autocomplete any open buffer
+
 
 
 " TAG JUMPING:
@@ -71,7 +84,6 @@ command! MakeTags !ctags -R .
 
 
 
-
 " AUTOCOMPLETE:
 
 " The good stuff is documented in |ins-completion|
@@ -84,6 +96,8 @@ command! MakeTags !ctags -R .
 
 " NOW WE CAN:
 " - Use ^n and ^p to go back and forth in the suggestion list
+
+
 
 " FILE BROWSING:
 
@@ -102,7 +116,6 @@ let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 
 
 
-
 " SNIPPETS:
 
 " Read an empty HTML template and move cursor to title
@@ -111,8 +124,6 @@ nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a
 " NOW WE CAN:
 " - Take over the world!
 "   (with much fewer keystrokes)
-
-
 
 
 
