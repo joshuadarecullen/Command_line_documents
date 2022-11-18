@@ -3,10 +3,23 @@ timezsh - time the shell
 
 exec zsh - restarts the shell
 
-Ctrl + U – delete from the cursor to the start of the line.
-Ctrl + K – delete from the cursor to the end of the line.
-Ctrl + W – delete from the cursor to the start of the preceding word.
-Alt + D – delete from the cursor to the end of the next word.
+Movement:
+
+Ctrl + a - move to the beginning of the line
+Ctrl + e - move to the end of the line
+Alt + F - to move the cursor forward one word
+Alt + B - to move the cursor backward
+
+editing:
+
+Alt + w  - delete from the cursor to the begining of the line
+Ctrl + k – delete from the cursor to the end of the line.
+
+Ctrl + u – delete whole line
+Ctrl + w – delete from the cursor to the start of the preceding word.
+
+Alt + d – delete from the cursor to the end of the next word.
+
 Ctrl + L – clear the terminal.
 
 

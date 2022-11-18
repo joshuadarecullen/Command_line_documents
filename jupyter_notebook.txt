@@ -1,0 +1,8 @@
+# Install
+conda install -c conda-forge jupyterthemes
+
+# List all themes available
+jt -l
+
+# Set theme
+jt -t theme-name

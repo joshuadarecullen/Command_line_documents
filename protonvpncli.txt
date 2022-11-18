@@ -1,0 +1,50 @@
+LOGIN
+protonvpn-cli login [Proton VPN username]
+
+
+CONNECT
+protonvpn-cli connect (or protonvpn-cli c)
+
+CHECK STATUS CONNECTION
+protonvpn-cli status (or protonvpn-cli s)
+
+DISCONNECT
+protonvpn-cli disconnect (or protonvpn-cli d)
+
+LIST OF OPTIONS
+protonvpn-cli c --help
+
+FASTEST VPN FOR YOUR LOCATION
+protonvpn-cli c -f
+
+TOR VPN - FASTEST
+protonvpn-cli c --tor
+
+ADDITIONAL OPTIONS - DNS Server
+protonvpn-cli config --help
+
+
+KILL SWITCH
+protonvpn-cli ks --on
+
+PERMANENT KILL SWITCH
+protonvpn-cli ks --permanent
+
+DISABLE KILL SWITCH
+protonvpn-cli ks --off
+
+
+NETSHIELD
+protonvpn-cli netshield --off
+or 
+protonvpn-cli ns --off
+
+MALWARE BLOCKER
+protonvpn-cli netshield --malware
+or
+protonvpn-cli ns --malware
+
+BLOCK MALWARE, ADS, AND TRACKERS
+protonvpn-cli netshield --ads-malware
+or
+protonvpn-cli ns --ads-malware
