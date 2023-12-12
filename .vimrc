@@ -1,17 +1,16 @@
 " 1. COSMETICS:
 " 2. LEADER KEY MAPPING:
-" 3. VIM PACKAGES:
-" 4. BASIC SETUP:
-" 5. SEARCHING THE CURRENT FILE:
-" 6. KEY MAPPINGS:
-" 7. FOLDS:
-" 8. WORKING WITH SPLITS:
-" 9. SPELL CHECKER:
-" 10. EXECUTE CURRENT SHELL IN PYTHON:
-" 11. FINDING FILES:
-" TAG JUMPING:
-" AUTOCOMPLETE:
-" FILE BROWSING:
+" 3. BASIC SETUP:
+" 4. SEARCHING THE CURRENT FILE:
+" 5. KEY MAPPINGS:
+" 6. FOLDS:
+" 7. WORKING WITH SPLITS:
+" 8. SPELL CHECKER:
+" 9. EXECUTE CURRENT SHELL IN PYTHON:
+" 10. FINDING FILES:
+" 11. TAG JUMPING:
+" 12. AUTOCOMPLETE:
+" 13. FILE BROWSING:
 
 
 " Plugins will be downloaded under the specified directory.
@@ -36,6 +35,7 @@ Plug 'ycm-core/YouCompleteMe'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
+" COSMETICS
 " Important!!
 if has('termguicolors')
   set termguicolors
