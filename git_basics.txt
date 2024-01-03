@@ -1,0 +1,42 @@
+1. COMMITTING TO DIRECTORY
+
+git add . -> Adds all the edited files
+
+git add <filename> -> Adds the named file
+
+git commit -m "a comment" -> commits the changes
+
+git push origin -> commits to the remote master origin
+
+
+2. CREATING A NEW BRANCH
+
+git branch <branch-name> -> creates new local branch
+
+git checkout <branch-name> -> switch to the new branch
+
+git checkout -b new-branch-name -> do the above two commands in one
+
+git push -u origin <branch-name> -> push branch to the remote repository 
+
+git fetch --all -> This step ensures you have all the latest branches available to you locally.
+
+git branch -> checks current branch
+
+git switch main -> switch back to main
+
+git pull origin <branch-name> -> pull newest update from branch
+
+
+If you only want to fetch the changes without merging them immediately, you can use git fetch followed by git merge
+
+git fetch origin <branch-name>
+
+git merge <origin/branch-name> -> After fetching, you can merge the changes into your branch
+
+Using git pull is generally more straightforward as it combines both fetching and merging in one command.
+
+
+3. Undo the Last Commit but Keep the Changes
+
+git reset HEAD~1 --soft -> Use the git reset command to undo the last commit but keep the changes in your working directory.
